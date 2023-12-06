@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Chat App</title>
+  <style>
+    /* CSS styles for the chat app */
+    .chat-box {
+      display: flex;
+    }
+    .chat-box .user-info {
+      flex: 1;
+      margin-right: 20px;
+    }
+    .chat-box .group-chat {
+      flex: 1;
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: scroll;
+      padding: 10px;
+    }
+    .chat-box .admin-section {
+      flex: 1;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    .chat-box .admin-section input[type="password"] {
+      margin-bottom: 10px;
+    }
+    .chat-box .admin-section button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .chat-box .admin-section .admin-content {
+      margin-top: 20px;
+    }
+    /* Additional styles for layout and appearance */
+  </style>
+</head>
+<body>
+  <h1>Welcome to the Group Chat!</h1>
+  
+  <div class="chat-box">
+    <div class="user-info">
+      <input type="text" id="usernameInput" placeholder="Enter your username">
+      <input type="text" id="messageInput" placeholder="Type your message">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+    <div class="group-chat" id="groupChat"></div>
+    <div class="admin-section">
+      <h2>Admin Section</h2>
+      <input type="password" id="passwordInput" placeholder="Admin Password">
+      <button onclick="loginAsAdmin()">Login</button>
+      <div class="admin-content"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Array to store messages
+    let messages = JSON.parse(localStorage.getItem('messages')) || [];
+
+    // Admin password
+    const adminPassword = "hahaschool";
+
+    // Function to send messages
+    function sendMessage() {
+      const username = document.getElementById('usernameInput').value;
+      const message = document.getElementById('messageInput').value;
+      if (username && message) {
+        const messageObj = { username, message };
+        messages.push(messageObj);
+        localStorage.setItem('messages', JSON.stringify(messages));
+        displayMessages();
+        document.getElementById('messageInput').value = '';
+      }
+    }
+
+    // Function to display messages
+    function displayMessages() {
+      const chatBox = document.getElementById('groupChat');
+      chatBox.innerHTML = '';
+      messages.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+        chatBox.appendChild(messageDiv);
+      });
+    }
+
+    // Function to log in as admin
+    function loginAsAdmin() {
+      const password = document.getElementById('passwordInput').value;
+      if (password === adminPassword) {
+        // Perform admin login actions here
+        // For instance, display or populate the admin section
+        alert('Admin login successful!');
+        // Example: displaying content in the admin section
+        const adminContent = document.querySelector('.admin-content');
+        adminContent.innerHTML = '<p>Welcome, Admin!</p>'; // Replace with your content
+      } else {
+        alert('Incorrect password!');
+      }
+    }
+
+    // Function to periodically update chat every 2.5 seconds
+    setInterval(() => {
+      messages = JSON.parse(localStorage.getItem('messages')) || [];
+      displayMessages();
+    }, 2500); // Changed interval to 2.5 seconds
+
+    // Initial display of messages
+    displayMessages();
+  </script>
+</body>
+</html>
